@@ -208,7 +208,7 @@ class fht_reDeployables(base):
                                             fht.Debug("%s : Build is False." %p.getName())
                                             self.hooker.later(info['respawn'], self.respawnEmplacement, obj.DID)
                                             p.packActive = False
-                                            fht.deleteThing(obj)
+                                            fht.deleteThing(obj, True)
                                             fhtd.depRegister[obj.DID]['active'] = False
                                             fhtd.depRegister[obj.DID]['current'] = None
                                             p.packActive = False
@@ -396,7 +396,7 @@ class fht_reDeployables(base):
                         self.respawnEmplacement(key, True)
                     else:
                         if not fht.sameTransform(pos, obj.getPosition()):
-                            fht.deleteThing(obj)
+                            fht.deleteThing(obj, True)
                             self.respawnEmplacement(key, True)
 
             for s in fhtd.depSpawners:

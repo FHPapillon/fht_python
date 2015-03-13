@@ -313,10 +313,10 @@ class fht_admin(base):
                                     return
                                 else:
                                     foundP.hash = tHash
-                            if not fhts.fht_adminHashes.has_key(foundP.hash) or fhts.fht_adminHashes[foundP.hash] < fhts.fht_adminHashes[p.hash]:
-                                fhts.fht_adminHashes[foundP.hash] = ranks[args[1]]
-                            else:
+                            if fhts.fht_adminHashes.has_key(foundP.hash) and not fhts.fht_adminHashes[foundP.hash] > fhts.fht_adminHashes[p.hash]:
                                 fht.personalMessage("§C1001You can only assign a new rank to a player beneath your rank.", p)
+                            else:
+                                fhts.fht_adminHashes[foundP.hash] = ranks[args[1]]
         except Exception, e:
             fht.Debug("Exception in fht_admin.setPermission(): " + str(e))             
 
@@ -529,20 +529,20 @@ class fht_admin(base):
             fht.Debug("Exception in fht_admin.droneTeleport(): " + str(e))
 
     def rallyLink(self, cmd, args, p):
-        try:
+##        try:
             rallies = fhtd.fhtPluginObjects['fht_deploySpawnPoint']
             rallies.hooker = self.hooker
             rallies.onRemoteCommand(p.index, "FHT_SL_deploying_spawnpoint")
-        except Exception, e:
-            fht.Debug("Exception in fht_admin.rallyLink(): " + str(e))
+##        except Exception, e:
+##            fht.Debug("Exception in fht_admin.rallyLink(): " + str(e))
 
     def rallyResetLink(self, cmd, args, p):
-        try:
+##        try:
             rallies = fhtd.fhtPluginObjects['fht_deploySpawnPoint']
             rallies.hooker = self.hooker
             rallies.resetRally(p)
-        except Exception, e:
-            fht.Debug("Exception in fht_admin.rallyResetLink(): " + str(e))
+##        except Exception, e:
+##            fht.Debug("Exception in fht_admin.rallyResetLink(): " + str(e))
 
 
     def adminCall(self, cmd, args, p):
@@ -792,8 +792,10 @@ class fht_admin(base):
         try:
             if fhtd.isLive:
                 fht.personalMessage("Round is live.", p)
+                utils.rconExec('game.sayall "§3Round is LIVE."')
             else:
                 fht.personalMessage("Round is NOT live.", p)
+                utils.rconExec('game.sayall "§3Round is NOT live."')
         except Exception, e:
             fht.Debug("Exception in fht_admin.textLive(): " + str(e))  
 
@@ -855,111 +857,105 @@ class fht_admin(base):
         except Exception, e:
             fht.Debug("Exception in fht_admin.textScore(): " + str(e)) 
 
-##    def textScore(self, cmd, args, p):
-##            try:
-##                    if not self.rounds_played or not self.axisstart or not self.alliedstart:
-##                        fht.personalMessage("No Live Rounds have been played yet.", p)
-##                        return
-##                    axis_rvp = ( float(self.axis_wins) / float(self.rounds_played) ) * RVP
-##                    adf.Debug("Axis RVP: %i" %axis_rvp)
-##                    axis_tvp = ( float(self.axis_tickets) / float( self.rounds_played * self.axisstart ) ) * TVP
-##                    adf.Debug("Axis RVP: %i" %axis_tvp)
-##
-##                    allied_rvp = ( float(self.allied_wins) / float(self.rounds_played) ) * RVP
-##                    adf.Debug("Allies RVP: %i" %allied_rvp)
-##                    allied_tvp = ( float(self.allied_tickets) / float( self.rounds_played * self.alliedstart ) ) * TVP
-##                    adf.Debug("Allies TVP: %i" %allied_tvp)
-##
-##                    axis_score = round((axis_rvp + axis_tvp)*(float(self.scoremod)/float(100.0)))
-##                    allied_score = round((allied_rvp + allied_tvp)*(float(self.scoremod)/float(100.0)))
-##
-##                    if self.rounds_played == 1:
-##                        s = ""
-##                    else:
-##                        s = "s"
-##
-##                    msg = "Total Remaining Tickets after %i Round%s: §C1001Axis: %i    Allies:  %i"%(self.rounds_played, s, self.axis_tickets, self.allied_tickets)
-##                    fht.personalMessage(msg, p)
-##                    
-##                    msg2 = "Projected Battle Score after %i Round%s: §C1001Axis: %.0f    Allies:  %.0f"%(self.rounds_played, s, axis_score, allied_score)
-##                    fht.personalMessage(msg2, p)
-##            except:
-##                    adf.Debug("Execption in TextScore()")
-##
-##
-##
-##    def WriteScore(self, rds, axis, allies):
-##            global loggingFile, loggingFileName, persistentFile, persistentFileName
-##
-##            try:
-##                            loggingFile = open(loggingFileName, "a")
-##                            
-##                            d = time.strftime("%Y-%m-%d %H:%M:%S")
-##                            message = ("Round %i Axis: %i Allies: %i ScoreMod: %i written %s\n" %(rds, axis, allies, self.scoremod, d))
-##                            loggingFile.write(message)
-##
-##                            loggingFile.close()
-##
-##                            persistentFile = open(persistentFileName, "a")
-##                            mapname = bf2.gameLogic.getMapName()
-##                            persistent_message = ("Map: %s, Round %i, Axis: %i out of %i, Allies: %i out of %i, Score Modifier: %i automatically written on %s\n" %(mapname, rds, axis, self.axisstart, allies, self.alliedstart, self.scoremod, d))                            
-##                            persistentFile.write(persistent_message)
-##
-##                            persistentFile.close()
-##
-##                            self.ReadScore()
-##            except:
-##                    adf.Debug("Exception in WriteScore()")
-##
-##
-##    def clearScores(self, cmd, args, p):
-##            try:
-##                    loggingFile = open(fhts.loggingFileName, "w")
-##                    loggingFile.close()
-##                    
-##                    adm_msg = ("Battle Scores have been cleared.")
-##                    fht.AdminPM(adm_msg, p)
-##
-##                    self.ReadScore()
-##                    
-##            except:
-##                    fht.Debug("Execption in ClearScores()")
+    def textScore(self, cmd, args, p):
+            try:
+                    if not fhtd.roundsPlayed or not self.axisstart or not self.alliedstart:
+                        fht.personalMessage("No Live Rounds have been played yet.", p)
+                        return
+                    axis_rvp = ( float(self.axis_wins) / float(self.rounds_played) ) * RVP
+                    adf.Debug("Axis RVP: %i" %axis_rvp)
+                    axis_tvp = ( float(self.axis_tickets) / float( self.rounds_played * self.axisstart ) ) * TVP
+                    adf.Debug("Axis RVP: %i" %axis_tvp)
+
+                    allied_rvp = ( float(self.allied_wins) / float(self.rounds_played) ) * RVP
+                    adf.Debug("Allies RVP: %i" %allied_rvp)
+                    allied_tvp = ( float(self.allied_tickets) / float( self.rounds_played * self.alliedstart ) ) * TVP
+                    adf.Debug("Allies TVP: %i" %allied_tvp)
+
+                    axis_score = round((axis_rvp + axis_tvp)*(float(self.scoremod)/float(100.0)))
+                    allied_score = round((allied_rvp + allied_tvp)*(float(self.scoremod)/float(100.0)))
+
+                    if self.rounds_played == 1:
+                        s = ""
+                    else:
+                        s = "s"
+
+                    msg = "Total Remaining Tickets after %i Round%s: §C1001Axis: %i    Allies:  %i"%(self.rounds_played, s, self.axis_tickets, self.allied_tickets)
+                    fht.personalMessage(msg, p)
+                    
+                    msg2 = "Projected Battle Score after %i Round%s: §C1001Axis: %.0f    Allies:  %.0f"%(self.rounds_played, s, axis_score, allied_score)
+                    fht.personalMessage(msg2, p)
+            except:
+                    adf.Debug("Execption in TextScore()")
+
+
+
+    def WriteScore(self, rds, axis, allies):
+        try:
+                            loggingFile = open(loggingFileName, "a")
+                            
+                            d = time.strftime("%Y-%m-%d %H:%M:%S")
+                            message = ("Round %i Axis: %i Allies: %i ScoreMod: %i written %s\n" %(rds, axis, allies, self.scoremod, d))
+                            loggingFile.write(message)
+
+                            loggingFile.close()
+
+                            persistentFile = open(persistentFileName, "a")
+                            mapname = bf2.gameLogic.getMapName()
+                            persistent_message = ("Map: %s, Round %i, Axis: %i out of %i, Allies: %i out of %i, Score Modifier: %i automatically written on %s\n" %(mapname, rds, axis, self.axisstart, allies, self.alliedstart, self.scoremod, d))                            
+                            persistentFile.write(persistent_message)
+
+                            persistentFile.close()
+
+                            self.ReadScore()
+        except Exception, e:
+            fht.Debug("Exception in fht_admin.textScore(): " + str(e)) 
+
+
+    def clearScores(self, cmd, args, p):
+            try:
+                    loggingFile = open(fhts.loggingFileName, "w")
+                    loggingFile.close()
+                    
+                    adm_msg = ("Battle Scores have been cleared.")
+                    fht.AdminPM(adm_msg, p)
+
+                    self.ReadScore()
+                    
+            except:
+                    fht.Debug("Execption in ClearScores()")
 ##
 
-##
-##
-##    # Read RoundScore
-##    def ReadScore(self):
-##            global loggingFile, loggingFileName
-##
-##            try:
-##                            loggingFile = open(loggingFileName, "r")
-##
-##                            self.axis_tickets = 0
-##                            self.axis_wins = 0
-##                            self.allied_tickets = 0
-##                            self.allied_wins = 0
-##                            self.rounds_played = 0
-##                            
-##                            for line in loggingFile:
-##                                args = line.strip().split()
-##                                rds = args[1]
-##                                axis = args[3]
-##                                allied = args[5]
-##                                self.scoremod = int(args[7])
-##
-##                                if self.rounds_played < int(rds):
-##                                    self.rounds_played = int(rds)
-##
-##                                self.axis_tickets += int(axis)
-##                                self.allied_tickets += int(allied)
-##
-##                                if int(axis) > int(allied):
-##                                    self.axis_wins += 1
-##                                elif int(axis) < int(allied):
-##                                    self.allied_wins += 1                                    
-##                                    
-##                            loggingFile.close()
-##
-##            except:
-##                    adf.Debug("Exception in ReadScore()")
+
+    def readScore(self):
+        try:
+            loggingFile = open(fhts.scoreFileName, "r")
+
+            self.axis_tickets = 0
+            self.axis_wins = 0
+            self.allied_tickets = 0
+            self.allied_wins = 0
+            self.rounds_played = 0
+                            
+            for line in loggingFile:
+                args = line.strip().split()
+                rds = args[1]
+                axis = args[3]
+                allied = args[5]
+                self.scoremod = int(args[7])
+
+                if self.rounds_played < int(rds):
+                    self.rounds_played = int(rds)
+
+                    self.axis_tickets += int(axis)
+                    self.allied_tickets += int(allied)
+
+                if int(axis) > int(allied):
+                    self.axis_wins += 1
+                elif int(axis) < int(allied):
+                    self.allied_wins += 1                                    
+                                    
+            loggingFile.close()
+
+        except Exception, e:
+            fht.Debug("Exception in fht_admin.readScore(): " + str(e))

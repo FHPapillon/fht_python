@@ -57,7 +57,7 @@ class fht_deploySpawnPoint(base):
             hooker.register('VehicleDestroyed', self.onVehicleDestroyed)
             self.shutOff(True)
             if not fhts.doRallies: return
-            self.createFallbacks()
+            # self.createFallbacks()
         except Exception, e:
             fht.Debug("Exception in fht_deploySpawnPoint.round_start(): " + str(e))
 

@@ -96,9 +96,12 @@ class fht_mainBaseKillCheck(base):
 
     def confirmList(self, p, safe = False):
         try:
-            if not p: return False
+            if not p or not p.isValid:
+                return False
             if safe: cp = p.ownMainBase
             else: cp = p.mainBaseEntered
+            if not cp or not utils.reasonableObject(cp):
+                return False
             pPos = p.getDefaultVehicle().getPosition()
             pPos = (pPos[0], 0.0, pPos[2])
             cPos = cp.getPosition()
@@ -185,6 +188,7 @@ class fht_mainBaseKillCheck(base):
             if not len(fhtd.objectSpawners):
                 objectSpawners = bf2.objectManager.getObjectsOfType('dice.hfe.world.ObjectTemplate.ObjectSpawner')
                 fhtd.objectSpawners = objectSpawners
+                fht.Debug("mBKC had to fetch objectspawners.")
             for s in fhtd.objectSpawners:
                 if not utils.reasonableObject(s):
                     continue
@@ -194,9 +198,9 @@ class fht_mainBaseKillCheck(base):
                     distance = utils.vectorDistance(cpPos, spPos)
                     if  distance + fhts.mainBaseBuffer > size:
                         size = distance + fhts.mainBaseBuffer
+            if size > fhts.maxMainBaseSize:
+                size = fhts.maxMainBaseSize
             fht.Debug("Final Size for " + cp.templateName + ": " + str(size))
-            if size > 200:
-                size = 200
             return size
         except Exception, e:
             fht.Debug("Exception in fht_mainBaseKillCheck.getBaseSize(): " + str(e))        
@@ -212,6 +216,8 @@ class fht_mainBaseKillCheck(base):
             p.enterWithVehicle = None
             p.enterPerimeterAt = None
             p.artyDestroyed = 0
+            if not fhtd.roundStarted:
+                fhtd.roundStarted = True
         except:
             fht.Debug("Exception in fht_mainBaseKillCheck.onPlayerSpawn(): " + str(e)) 
 
