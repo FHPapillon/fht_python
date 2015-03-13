@@ -24,6 +24,7 @@ doRallies = True
 doRedeployables = True
 doMainBaseCheck = True
 doShuffle = True
+someTestVariable = False
 
 #-------------------------------
 #    fht_deploySpawnPoint.py
