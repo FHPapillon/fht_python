@@ -22,8 +22,8 @@ import game.fht_data as fhtd
 import game.fht_settings as fhts
 import game.gamemodes.gpm_cq as gpm
 rcon = utils.rconExec
-debugFileName = "mods/fh2/fht/fhtDebug.log"
-errorFileName = "mods/fh2/fht/fhtErrors.log"
+debugFileName = "mods/fh2/fht/fhtdebug.log"
+errorFileName = "mods/fh2/fht/fhterrors.log"
 
 
 def getPluginObjects():
@@ -54,15 +54,18 @@ def Debug(msg):
         msg = str(msg)
         if "exception" in msg.lower():
             errorFile = open(errorFileName, "a")
-            errorFile.write("\n" + msg)
+            d = time.strftime("%Y-%m-%d %H:%M:%S")
+            errorFile.write(d + ": " + msg + "\n")
             errorFile.close()
-            adminPM(msg)
+            if not fhts.debugging:
+                adminPM(msg)
         if fhts.debugging:
                 host.rcon_invoke('echo "DEBUG: %s"' % msg)
                 host.rcon_invoke('game.sayall "DEBUG: %s"' % msg)
                 print msg
                 debugFile = open(debugFileName, "a")
-                debugFile.write("\n" + msg)
+                d = time.strftime("%Y-%m-%d %H:%M:%S")
+                debugFile.write(d + ": " + msg + "\n")                
                 debugFile.close()                   
         if fhts.isDedicated:
                 for p in fhtd.debugUsers:
