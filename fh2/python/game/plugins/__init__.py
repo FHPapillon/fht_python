@@ -30,7 +30,7 @@ from phaseCP import phaseCP
 from phaseTickets import phaseTickets
 from mapVote import mapVote
 from delaySpawners import delaySpawners
-from fht_bleedReinforcments import fht_bleedReinforcments
+from fht_bleedReinforcements import fht_bleedReinforcements
 from fht_admin import fht_admin
 from fht_deploySpawnPoint import fht_deploySpawnPoint
 from fht_mainBaseKillCheck import fht_mainBaseKillCheck

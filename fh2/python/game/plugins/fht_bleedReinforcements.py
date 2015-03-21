@@ -29,12 +29,12 @@ from game.scoringCommon import hasPilotKit
 
 
 class fht_bleedReinforcements(base):
-    def __init__(self, bleedCPAxis, bleedCPAllied, alliedCPsForAxisBleed, axisCPsForAlliedBleed):
+    def __init__(self, bleedCpAxis, bleedCpAllied, alliedCpsForAxisBleed, axisCpsForAlliedBleed):
         try:
-            fhtd.bleedCPAxis = bleedCPAxis
-            fhtd.bleedCPAllied = bleedCPAllied
-            fhtd.alliedCPsForAxisBleed = alliedCPsForAxisBleed
-            fhtd.axisCPsForAlliedBleed = axisCPsForAlliedBleed
+            fhtd.bleedCPAxis = bleedCpAxis
+            fhtd.bleedCPAllied = bleedCpAllied
+            fhtd.alliedCPsForAxisBleed = alliedCpsForAxisBleed
+            fhtd.axisCPsForAlliedBleed = axisCpsForAlliedBleed
         except Exception, e:
             fht.Debug("Exception in fht_bleedReinforcements.init(): " + str(e))
 
