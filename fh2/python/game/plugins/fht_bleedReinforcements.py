@@ -29,7 +29,7 @@ from game.scoringCommon import hasPilotKit
 
 
 class fht_bleedReinforcements(base):
-    def __init__(self, bleedCpAxis, bleedCpAllied, alliedCpsForAxisBleed, axisCpsForAlliedBleed):
+    def __init__(self, bleedCpAxis, bleedCpAllied, alliedCpsForAxisBleed = 3, axisCpsForAlliedBleed = 3):
         try:
             fhtd.bleedCPAxis = bleedCpAxis
             fhtd.bleedCPAllied = bleedCpAllied

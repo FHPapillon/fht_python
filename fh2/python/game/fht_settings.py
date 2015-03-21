@@ -24,23 +24,22 @@ doRallies = True
 doRedeployables = True
 doMainBaseCheck = True
 doShuffle = True
-someTestVariable = False
 
 #-------------------------------
 #    fht_deploySpawnPoint.py
 #-------------------------------
 maxDistanceToSquadMember = 10
-minSquadPsNear = 1
+minSquadPsNear = 2
 rallyRegisterDelay = 0.1
 rallyDeployPosition = (0.0, -1.0, 0.0)	        # SP position relative to SL position (to fix floating SP objects)
 rallyTemplatePrefix = "fht_radio_rp"            # name of the deployable spawn point object template for team 0 (dummy, not used), 1 and 2 respectively
 rallySpawnSuffix = "_SpawnPoint"                # note that the object template(s) must be already defined in .con files and known to the map
 rallyRadius = 10.0
-waitTimeRally = 10.0
-waitTimeRallySL = 10.0
+waitTimeRally = 120.0
+waitTimeRallySL = 240.0
 minDisTeamSP = 20.0
 minDisFlag = 10.0
-rallyTTL = 120.0
+rallyTTL = 600.0
 rallyTTLSL = 120.0
 fixRallyAfter = 3
 testRallyDisable = False
@@ -87,6 +86,9 @@ RVP = 100.0
 TVP = 50.0           
 isDedicated = True
 scoreFileName = "mods/fh2/fht/fhtScores.log"
+loggingFileName = "battle_scores.txt"
+persistentFileName = "all_scores.txt"
+
 
 fht_adminPowerLevels = {	    # Rights management. The lower the powerlevel, the more power one has. 
 				    # 0: Superuser, 1: Admin, 2: HQ, 3: CO, 777: Open
@@ -95,7 +97,7 @@ fht_adminPowerLevels = {	    # Rights management. The lower the powerlevel, the 
 	# Text messages
 	"help":			777,								# Show help about custom commands.												
 	"location":		0,								# Show current location in map coordinates.
-##        "perimeter":            1,                                                              # Shows which players are currently inside enemy main base perimeter.
+        "perimeter":            1,                                                              # Shows which players are currently inside enemy main base perimeter.
 
 	# Battle Control
 ##	"clear":	    	1,								# Clear Round Scores at start of battle.
@@ -122,26 +124,26 @@ fht_adminPowerLevels = {	    # Rights management. The lower the powerlevel, the 
         "tele":		        1,				                                #   --""--
 
         # HQ Commands
-##        "mainbase":             2,                                                              # Choose a mainbase if Mainbase Selection is supported.
+        "mainbase":             2,                                                              # Choose a mainbase if Mainbase Selection is supported.
         "adminpm":              2,                                                              # Send a Message to all admins.
 
         # Plugins
         "import":               0,                                                              # Re-import settings for specified or all FHT plugins.
-##        "plugin":               0,                                                              # Enable specified FHT plugin.
-##        "mbchange":             1,                                                              # In-/Decrease Size of a MainBase
+        "plugin":               0,                                                              # Enable specified FHT plugin.
+        "mbchange":             1,                                                              # In-/Decrease Size of a MainBase
         "fhtdebugme":           1,                                                              # Turn on personal fht debug messages.
         "fhtdebug":             1,                                                              # Turn on global fht debug messages.
-##        "shuffle":              0,                                                              # Shuffle Flags
+        "shuffle":              0,                                                              # Shuffle Flags
     
 	# Open commands									        # Please note that 777 is a fixed value for "open" commands! This means everybody on the server can use them
-##        "live":  		777,								# Shows whether the round is live.												        
-##	"score":		777,								# Shows the battlescore.
+        "live":  		777,								# Shows whether the round is live.												        
+	"score":		777,								# Shows the battlescore.
 ##	"standings":		777,								# Shows the campaign score.
-##        "rp":                   777,                                                            # Deploys Squad Rally Point.
-##        "rally":                777,                                                            #   --""--
-##        "rallypoint":           777,                                                            #   --""--
-##        "rr":                   777,                                                            # Resets the rally point, to fix spawnpoint disappearing
-##        "resetrally":           777,                                                            #   --""--
+        "rp":                   777,                                                            # Deploys Squad Rally Point.
+        "rally":                777,                                                            #   --""--
+        "rallypoint":           777,                                                            #   --""--
+        "rr":                   0,                                                            # Resets the rally point, to fix spawnpoint disappearing
+        "resetrally":           0,                                                            #   --""--
 }       
 
 
@@ -157,8 +159,7 @@ forceMainBase = zip([],[])
 perimeterTriggerTime = 120.0
 mainBaseBuffer = 50.0
 warnLength = 5.0
-maxMainBaseSize = 200.0
-
+maxMainbaseSize = 150.0
 allowedVehicleTypes = [ VEHICLE_TYPE_TRANSPORT, VEHICLE_TYPE_BICYCLE, VEHICLE_TYPE_PARACHUTE ]
 allowedWeaponTypes = [ WEAPON_TYPE_MINEFLAG, WEAPON_TYPE_TARGETING, WEAPON_TYPE_MINEDET, WEAPON_TYPE_GOLD, WEAPON_TYPE_SMOKE, WEAPON_TYPE_EXPLOSIVE, WEAPON_TYPE_CLOSE, WEAPON_TYPE_NONLETHAL ]
 monitorVehicleTypes = [ VEHICLE_TYPE_HEAVYARMOR, VEHICLE_TYPE_MEDIUMARMOR, VEHICLE_TYPE_LIGHTARMOR, VEHICLE_TYPE_AIR, VEHICLE_TYPE_APC, VEHICLE_TYPE_ARMOREDCAR ]
@@ -175,43 +176,7 @@ wrenches = [ 'wrench', 'wrench-i5' ]
 artyUnsafeRadius = 15.0
 mBCKRepeatDelay = 3.0
 mBCKCorrFactor = 1.05
-
-
-
-#-------------------------------
-#    fht_machineGuns.py
-#-------------------------------
-
-# bar18a2_slow -> convert
-# boys -> maybe convert
-# breda30 -> convert
-# brenmk1 -> convert
-# fg42_deployed -> convert
-# fg42_zf_deployed -> convert
-# lewishandheld -> test (lewis_bipod)
-# m1919a6 -> should work fine, just rename some
-# mg34bipod -> test (mg34_bipod)
-# mg42bipod -> fix crashes (mg42_bipod)
-# pzb39 -> maybe convert
-# zb26_deployed -> convert
-
-
-depMachineGuns = {
-    
-    'gw_lmg_mg42_limited': 'mg42_bipod',
-    'gs_lmg_mg42_limited': 'mg42_bipod',
-    'ga_pickupsupportmg42': 'mg42_bipod',
-    'gw_pickupsupportmg42': 'mg42_bipod',
-    'uw_pickupsupportm1919a6': 'm1919a6_emplaced',
-    'uw_lmg_m1919a6_limited': 'm1919a6_emplaced'
-    }
-
-depMGWeapon = 'carlisle_dressing'
-depMGProjectile = 'carlisle_dressing_projectile'
-depMGDelay = 2.0
-testDone = False
-
-
+ 
 
 #-------------------------------
 #    fht_redeploybles.py
@@ -297,3 +262,36 @@ emplacements = {
     'm33': dict(kit = 'm33_deployer_kit', type = 'aa_gun', offset = 0.10989),
     'm51': dict(kit = 'm51_deployer_kit', type = 'aa_gun', offset = 0.21151),
     'm51_win': dict(kit = 'm51_deployer_kit', type = 'aa_gun', offset = 0.21151)}
+
+	#-------------------------------
+#    fht_machineGuns.py
+#-------------------------------
+
+# bar18a2_slow -> convert
+# boys -> maybe convert
+# breda30 -> convert
+# brenmk1 -> convert
+# fg42_deployed -> convert
+# fg42_zf_deployed -> convert
+# lewishandheld -> test (lewis_bipod)
+# m1919a6 -> should work fine, just rename some
+# mg34bipod -> test (mg34_bipod)
+# mg42bipod -> fix crashes (mg42_bipod)
+# pzb39 -> maybe convert
+# zb26_deployed -> convert
+
+
+depMachineGuns = {
+    
+    'gw_lmg_mg42_limited': 'mg42_bipod',
+    'gs_lmg_mg42_limited': 'mg42_bipod',
+    'ga_pickupsupportmg42': 'mg42_bipod',
+    'gw_pickupsupportmg42': 'mg42_bipod',
+    'uw_pickupsupportm1919a6': 'm1919a6_emplaced',
+    'uw_lmg_m1919a6_limited': 'm1919a6_emplaced'
+    }
+
+depMGWeapon = 'carlisle_dressing'
+depMGProjectile = 'carlisle_dressing_projectile'
+depMGDelay = 2.0
+testDone = False

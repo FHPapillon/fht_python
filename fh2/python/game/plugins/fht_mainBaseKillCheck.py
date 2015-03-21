@@ -188,7 +188,6 @@ class fht_mainBaseKillCheck(base):
             if not len(fhtd.objectSpawners):
                 objectSpawners = bf2.objectManager.getObjectsOfType('dice.hfe.world.ObjectTemplate.ObjectSpawner')
                 fhtd.objectSpawners = objectSpawners
-                fht.Debug("mBKC had to fetch objectspawners.")
             for s in fhtd.objectSpawners:
                 if not utils.reasonableObject(s):
                     continue
@@ -198,8 +197,9 @@ class fht_mainBaseKillCheck(base):
                     distance = utils.vectorDistance(cpPos, spPos)
                     if  distance + fhts.mainBaseBuffer > size:
                         size = distance + fhts.mainBaseBuffer
-            if size > fhts.maxMainBaseSize:
-                size = fhts.maxMainBaseSize
+            
+            if size > fhts.maxMainbaseSize:
+                size = fhts.maxMainbaseSize
             fht.Debug("Final Size for " + cp.templateName + ": " + str(size))
             return size
         except Exception, e:
