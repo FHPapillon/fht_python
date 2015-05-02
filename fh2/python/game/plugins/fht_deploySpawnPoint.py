@@ -336,6 +336,9 @@ class fht_deploySpawnPoint(base):
             rTemplate = rTemplate.lower()
             rPos = utils.denormalise(pPos, fhts.rallyDeployPosition)
             utils.createObject(rTemplate, rPos, (0.0, 0.0, 0.0), pTeam, ttl)
+            spTemplate = fhts.rallyTemplatePrefix + '_' + str(rally.team) + '_' + str(rally.squad) + fhts.rallySpawnSuffix
+            utils.active(spTemplate)
+            utils.rconExec('ObjectTemplate.setOnlyForAI 0')               
             info[pTeam][pSquad] = host.timer_getWallTime()
             fht.Debug("Should have written info at " + str(host.timer_getWallTime()))
             fht.Debug("Is actually: " + str(info[pTeam][pSquad]))
