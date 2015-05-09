@@ -30,7 +30,7 @@ doShuffle = True
 #-------------------------------
 maxDistanceToSquadMember = 10
 minSquadPsNear = 2
-rallyRegisterDelay = 0.1
+rallyRegisterDelay = 0.4
 rallyDeployPosition = (0.0, -1.0, 0.0)	        # SP position relative to SL position (to fix floating SP objects)
 rallyTemplatePrefix = "fht_radio_rp"            # name of the deployable spawn point object template for team 0 (dummy, not used), 1 and 2 respectively
 rallySpawnSuffix = "_SpawnPoint"                # note that the object template(s) must be already defined in .con files and known to the map

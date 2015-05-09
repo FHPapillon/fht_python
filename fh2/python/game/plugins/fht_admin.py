@@ -24,6 +24,21 @@ import game.fht_utilities as fht
 import game.fht_settings as fhts
 import game.fht_data as fhtd
 
+def newHasPilotKit(player):
+    if not player.isAlive():
+        return False
+
+    if player.getVehicle().templateName.lower() in game.fht_settings.droneTemplate.lower():
+        return True
+    
+    if player.getKit() is None:
+        return False
+    
+    kt = getKitType(player.getKit().templateName)
+    if kt == KIT_TYPE_PILOT:
+        return True
+    else:
+        return False
 
 class fht_admin(base):
  
@@ -91,10 +106,33 @@ class fht_admin(base):
             hooker.register('EnterVehicle', self.onVehicleEntered)
             hooker.register('ChatMessage', self.onChatMessage)
             host.registerGameStatusHandler(self.onGameStatusChanged)
-
+            self.fhtPyOverrides()
 ##            self.readScore()
         except Exception, e:
             fht.Debug("Exception in fht_admin.round_start(): " + str(e))            
+
+    def fhtPyOverrides(self):
+        try:
+            from game.scoringCommon import hasPilotKit
+            hasPilotKit.func_code = newHasPilotKit.func_code
+
+            import limitKit
+            limitKit.LARGE_SQUAD_SIZE = 10
+
+            import vehicleMetadata as vMd
+            vMd.artillery_info['lefh18_fht'] = (dict(barrel = 'lefh18_fht_gun', azimuth = 'lefh18_fht_remotecam_azi_req', elevation = 'lefh18_fht_remotecam_elev_req', camera = 'lefh18_fht_remotecam_holder', velocity = 480.0, gravitymod = 10.0, elevation_offset = -0.25, indicator = 'lefh18_fht_remotecam_targetind', static = True))
+            vMd.artillery = vMd.artillery_info.keys()
+
+            import game.stats.constants as st
+            st.weaponTypeMap['wrench'] = st.WEAPON_TYPE_NONLETHAL
+            st.weaponTypeMap['no73atgrenade'] = st.WEAPON_TYPE_EXPLOSIVE
+            st.weaponTypeMap['wrench_pack'] = st.WEAPON_TYPE_ATGUN
+            st.vehicleTypeMap['mc205'] = st.VEHICLE_TYPE_AIR
+            st.vehicleTypeMap['lefh18_fht'] = st.VEHICLE_TYPE_ARTILLERY
+            
+        except Exception, e:
+            fht.Debug("Exception in fht_admin.fhtPyOverrides(): " + str(e))
+         
 
     def onGameStatusChanged(self, status):
         try:    
